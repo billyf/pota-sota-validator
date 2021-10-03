@@ -48,19 +48,19 @@ function addToOutput(record, missingData, pastChases) {
 	if (record['qth']) {
 		qth = " [" + record['qth'] + "]";
 	}
+	var historyType = getHistoryType();
 	var p2p = "";
-	if (record['sig_info']) {
+	if ((historyType == 'pota' || historyType == 'both') && record['sig_info']) {
 		p2p = " [P2P]";
 		summary.p2p++;
 	}
-	if (record['sota_ref']) {
+	if ((historyType == 'sota' || historyType == 'both') && record['sota_ref']) {
 		p2p = " [S2S]";
 		summary.p2p++;
 	}
 	var li = $("<li>");
 	var line = qrzLink + qth + p2p;
 	li.append(line);
-	var historyType = getHistoryType();
 	if (missingData && missingData.length > 0) {
 		li.append(" MISSING DATA: " + missingData);
 		li.css('color', 'red');
