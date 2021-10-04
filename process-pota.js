@@ -25,7 +25,7 @@ function onChooseFile(event, onLoadFileHandler) {
 function processAdif() {
 	// $("#status").text("Parsing ADIF and checking chasers...");
 	$("#results_list").empty();
-	summary.total = summary.p2p = summary.invalid = summary.newChasers = summary.pastChasers = 0;
+	summary.total = summary.p2p = summary.s2s = summary.invalid = summary.newChasers = summary.pastChasers = 0;
 	
 	var adifContents = $("#adif_contents").val();
 	var parsed = adifParser.AdifParser.parseAdi(adifContents); // tag names get converted to lowercase
@@ -56,7 +56,7 @@ function addToOutput(record, missingData, pastChases) {
 	}
 	if ((historyType == 'sota' || historyType == 'both') && record['sota_ref']) {
 		p2p = " [S2S]";
-		summary.p2p++;
+		summary.s2s++;
 	}
 	var li = $("<li>");
 	var line = qrzLink + qth + p2p;
@@ -193,11 +193,11 @@ function showSummary() {
 	addToSummaryList("New (or incorrect) chasers: " + summary.newChasers, (summary.newChasers > 0 ? 'orange' : 'black'));
 	addToSummaryList("Known chasers: " + summary.pastChasers, 'green');
 	if (getHistoryType() == 'pota') {
-		addToSummaryList("P2Ps: " + summary.p2p, 'black');
+		addToSummaryList("P2P: " + summary.p2p, 'black');
 	} else if (getHistoryType() == 'sota') {
-		addToSummaryList("S2S: " + summary.p2p, 'black');
+		addToSummaryList("S2S: " + summary.s2s, 'black');
 	} else {
-		addToSummaryList("P2P/S2S: " + summary.p2p, 'black');
+		addToSummaryList("P2P/S2S: " + summary.p2p + "/" + summary.s2s, 'black');
 	}
 }
 
