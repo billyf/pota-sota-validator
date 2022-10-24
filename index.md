@@ -2,7 +2,7 @@
 <script type="text/javascript" src="adif-parser.umd.min.js"></script>
 <script type="text/javascript" src="chaser_data_pota.js"></script>
 <script type="text/javascript" src="chaser_data_sota.js"></script>
-<script type="text/javascript" src="process-pota.js"></script>
+<script type="text/javascript" src="process-potasota.js"></script>
 
 <span id="lastUpdatedSpan"></span>
 
