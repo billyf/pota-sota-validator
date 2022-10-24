@@ -145,23 +145,37 @@ function checkChaser(record) {
 	var chaserHistory = {potaModeMatches: 0, allPotaMatches: 0, allSotaMatches: 0};
 	if (call) {
 		call = call.toUpperCase();
+		// if call has /P we'll search that too
+		var callWithoutP = null;
+		if (call.endsWith("/P")) {
+			callWithoutP = call.substring(0, call.length - 2);
+		}
 		
+		var potaData = null;
 		if (call in callsignDataPota) {
+			potaData = callsignDataPota[call];
+		} else if (callWithoutP && callWithoutP in callsignDataPota) {
+			potaData = callsignDataPota[callWithoutP];
+		}
+			
+		if (potaData) {
 			var mode = record['mode'];
 			mode = mode.toUpperCase();
 			if (mode == 'CW') {
-				chaserHistory.potaModeMatches = callsignDataPota[call][0];
+				chaserHistory.potaModeMatches = potaData[0];
 			} else if (mode == 'SSB') {
-				chaserHistory.potaModeMatches = callsignDataPota[call][1];
+				chaserHistory.potaModeMatches = potaData[1];
 			} else {
 				// defaulting to digital mode
-				chaserHistory.potaModeMatches = callsignDataPota[call][2];
+				chaserHistory.potaModeMatches = potaData[2];
 			}
 			
-			chaserHistory.allPotaMatches = callsignDataPota[call][0] + callsignDataPota[call][1] + callsignDataPota[call][2];
+			chaserHistory.allPotaMatches = potaData[0] + potaData[1] + potaData[2];
 		}
 		if (call in callsignDataSota) {
-			chaserHistory.allSotaMatches = callsignDataSota[call];			
+			chaserHistory.allSotaMatches = callsignDataSota[call];
+		} else if (callWithoutP && callWithoutP in callsignDataSota) {
+			chaserHistory.allSotaMatches = callsignDataSota[callWithoutP];
 		}
 	}
 	return chaserHistory;
