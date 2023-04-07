@@ -45,7 +45,9 @@ function addToOutput(record, missingData, pastChases) {
 	var mode = record['mode'];
 	var qrzLink = getQrzLink(call);
 	var qth = "";
-	if (record['qth']) {
+	if (record['state']) {
+		qth = " [" + record['state'] + "]";
+	} else if (record['qth']) {
 		qth = " [" + record['qth'] + "]";
 	}
 	var historyType = getHistoryType();
@@ -186,10 +188,10 @@ function getQrzLink(call) {
 }
 
 // mandatory fields:
-// Date, Time, Band, Mode, other call, my call STATION_CALLSIGN, my park MY_SIG_INFO
+// Date, Time, Band, Mode, other call, my call STATION_CALLSIGN or OPERATOR, my park MY_SIG_INFO
 function validateRequiredData(record) {
-	const mandatoryFieldsPota = ["qso_date", "time_on", "band", "mode", "call", "station_callsign", "my_sig_info"];
-	const mandatoryFieldsSota = ["qso_date", "time_on", "band", "mode", "call", "station_callsign", "my_sota_ref"];
+	const mandatoryFieldsPota = ["qso_date", "time_on", "band", "mode", "call", "my_sig_info"];
+	const mandatoryFieldsSota = ["qso_date", "time_on", "band", "mode", "call", "my_sota_ref"];
 	var mandatoryFields = (getHistoryType() == 'sota' ? mandatoryFieldsSota : mandatoryFieldsPota); // check POTA format if pota+sota selected
 	var missingData = [];
 	for (i in mandatoryFields) {
@@ -197,6 +199,11 @@ function validateRequiredData(record) {
 			missingData.push(mandatoryFields[i]);
 		}
 	}
+	// also needs to have either "station_callsign" or "operator"
+	if (!("station_callsign" in record) && !("operator" in record)) {
+		missingData.push("station_callsign or operator");
+	}
+	
 	return missingData;
 }
 
